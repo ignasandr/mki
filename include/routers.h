@@ -1,6 +1,8 @@
 #include <Arduino.h> 
 #include <global.h>
-#include <output.h>
+#include <StandardCplusplus.h>
+#include <algorithm>
+#include <vector>
 #ifndef ROUTERS_H
 #define ROUTERS_H
 
@@ -15,5 +17,7 @@ void mainRouter(uint8_t pin, uint8_t change);
 void noteRouter(uint8_t pin, uint8_t change);
 void switchRouter(uint8_t pin, uint8_t change);
 void shiftRouter(uint8_t pin, uint8_t change);
+
+void manageArpSequence(uint8_t pin, uint8_t change); 
 
 #endif

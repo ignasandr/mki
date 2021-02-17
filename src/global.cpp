@@ -1,5 +1,7 @@
 #include <global.h>
 
+using namespace std;
+
 uint8_t mainMode = DEF;
 
 struct note initPinNotes[][3] =
@@ -19,6 +21,14 @@ uint8_t getMainMode() {
 
 void setMainMode(uint8_t mode) {
     mainMode = mode;
+}
+
+void printVec(vector<uint8_t> &vect) {
+    Serial.print("-");
+    for(auto v : vect) {
+        Serial.print(v);
+    }
+    Serial.println("-");
 }
 
 
