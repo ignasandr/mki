@@ -33,7 +33,7 @@ void setup() {
     init(arr[0], arr[1]);
     if (arr[1] == INPUT_PULLUP)
       {
-        button newButton = {arr[0], HIGH};
+        button newButton = {arr[0], HIGH, 0};
         buttonState.push_back(newButton);
       }
   }
@@ -42,7 +42,7 @@ void setup() {
 
 void loop() {
   for (auto &button : buttonState) {
-    uint8_t current = stateChange(button.pin, button.state);
+    uint8_t current = stateChange(button.pin, button.state, button.bounceTime);
     if (current > 0) {
       mainRouter(button.pin, current);
     }

@@ -8,6 +8,7 @@ enum{DEF, SAMP, HOLD};
 struct button {
   uint8_t pin;
   uint8_t state;
+  unsigned long bounceTime;
 };
 
 struct note {
