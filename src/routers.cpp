@@ -1,9 +1,5 @@
 #include <routers.h>
 
-using namespace std;
-
-vector<uint8_t> arpSequence;
-
 void mainRouter(uint8_t pin, uint8_t change) {
     switch(pin) {
         case 2 ... 8: 
@@ -80,14 +76,10 @@ void shiftRouter(uint8_t pin, uint8_t change) {
 void manageArpSequence(uint8_t pin, uint8_t change) {
     switch(change) {
         case PRESSED:
-            if(find(arpSequence.begin(), arpSequence.end(), pin) == arpSequence.end()) {
-                arpSequence.push_back(pin);
-            }
-            printVec(arpSequence);
+            addToArp(pin);
             break;
         case RELEASED:
-            arpSequence.erase(std::remove(arpSequence.begin(), arpSequence.end(), pin), arpSequence.end());
-            printVec(arpSequence);
+            removeFromArp(pin);
             break;
     }
 }

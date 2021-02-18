@@ -1,8 +1,5 @@
 #include <Arduino.h> 
 #include <global.h>
-#include <StandardCplusplus.h>
-#include <algorithm>
-#include <vector>
 #ifndef ROUTERS_H
 #define ROUTERS_H
 

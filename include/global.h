@@ -22,6 +22,10 @@ struct note {
 
 uint8_t getMainMode();
 void setMainMode(uint8_t mode);
+
+void addToArp(uint8_t pin);
+void removeFromArp(uint8_t pin);
+
 void printVec(std::vector<uint8_t> &vect);
 
 #endif
