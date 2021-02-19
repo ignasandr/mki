@@ -4,6 +4,12 @@ const static uint8_t debounceTime = 25;
 const static int8_t rising = HIGH - LOW;
 const static int8_t falling = LOW - HIGH;
 
+uint8_t beats_per_minute = 120;
+uint16_t milliseconds_per_minute = 60000;
+float MS_per_beat = milliseconds_per_minute/beats_per_minute;
+unsigned long last_time = 0;
+uint8_t tickCounter = 0;
+
 void init(uint8_t pin, uint8_t mode) {
     pinMode(pin, mode);
 }
@@ -28,3 +34,30 @@ uint8_t stateChange(uint8_t pin, uint8_t &previousState, unsigned long &previous
   previousState = state; // remember the current state
   return stateChange;
 };
+
+void generateTicks() {
+  unsigned long current_time = millis();    //Time reference. Elapsed time since board is on
+  float ticks = MS_per_beat/24;      //96 ticks per beat
+
+   uint8_t elapsed_time = current_time - last_time;
+    
+    if(elapsed_time >= ticks && getIntClock() == true)
+    {
+      last_time = current_time;
+      handleTicks();
+    }
+}
+
+void handleTicks() {
+    tickCounter++; 
+    if (tickCounter % 6 == 0) {
+        // Serial.println("Sixteenth");
+    } 
+    if (tickCounter % 12 == 0) {
+        // Serial.println("Eight");
+    }
+    if (tickCounter == 24) {
+      // Serial.println("QuarterNote");
+      tickCounter = 0;
+    }
+}

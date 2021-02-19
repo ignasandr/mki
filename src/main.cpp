@@ -47,5 +47,6 @@ void loop() {
       mainRouter(button.pin, current);
     }
   }
+  generateTicks();
 }
 

@@ -6,4 +6,7 @@
 void init(uint8_t pin, uint8_t mode);
 uint8_t stateChange(uint8_t pin, uint8_t &previousState, unsigned long &previousBounceTime);
 
+void generateTicks();
+void handleTicks();
+
 #endif

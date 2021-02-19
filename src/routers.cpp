@@ -42,12 +42,14 @@ void noteRouter(uint8_t pin, uint8_t change) {
 void switchRouter(uint8_t pin, uint8_t change) {
     switch(change) {
         case PRESSED:
-            Serial.print(pin);
-            Serial.println("16th notes");
+            intClockOn();
+            Serial.println("Internal Clock ON");
+            // Serial.println("16th notes");
             break;
         case RELEASED:
-            Serial.print(pin);
-            Serial.println("8th notes");
+            intClockOff();
+            Serial.println("Internal Clock OFF");
+            // Serial.println("8th notes");
             break;
     }
 }
