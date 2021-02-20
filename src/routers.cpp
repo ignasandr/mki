@@ -85,3 +85,20 @@ void manageArpSequence(uint8_t pin, uint8_t change) {
             break;
     }
 }
+
+uint8_t tickCounter = 0;
+
+void handleTicks() {
+    tickCounter++; 
+    if (tickCounter % 6 == 0) {
+        // Serial.println("Sixteenth");
+    } 
+    if (tickCounter % 12 == 0) {
+        // Serial.println("Eight");
+        playFromArp(); 
+    }
+    if (tickCounter == 24) {
+      // Serial.println("QuarterNote");
+      tickCounter = 0;
+    }
+}

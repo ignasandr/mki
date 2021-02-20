@@ -1,5 +1,6 @@
 #include <Arduino.h> 
 #include <global.h>
+#include <output.h>
 #ifndef ROUTERS_H
 #define ROUTERS_H
 
@@ -16,5 +17,7 @@ void switchRouter(uint8_t pin, uint8_t change);
 void shiftRouter(uint8_t pin, uint8_t change);
 
 void manageArpSequence(uint8_t pin, uint8_t change); 
+
+void handleTicks();
 
 #endif

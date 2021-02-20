@@ -104,3 +104,12 @@ void printVec(vector<uint8_t> &vect) {
     }
     Serial.println("-");
 }
+
+uint8_t getNoteByPin(uint8_t pin) {
+    for(auto arr : pinNotes) {
+        if(arr->pin == pin) {
+            return arr->note;
+        }
+    }
+    return 0;
+}
