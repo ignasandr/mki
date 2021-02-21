@@ -47,4 +47,17 @@ uint8_t getNoteByPin(uint8_t pin);
 
 void printVec(std::vector<uint8_t> &vect);
 
+uint16_t getRotaryValue();
+
+uint8_t getDivisionTicks();
+void setDivisionTicks(uint8_t numberOfTicks);
+
+boolean getStopCounterOn();
+void turnStopCounterOn(uint8_t numberOfTicks);
+void turnStopCounterOff();
+
+uint8_t getStopCounter();
+void decrStopCounter();
+void setStopCounter(uint8_t numberOfTicks);
+
 #endif

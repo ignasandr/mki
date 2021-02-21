@@ -90,6 +90,9 @@ uint8_t tickCounter = 0;
 
 void handleTicks() {
     tickCounter++; 
+    if (getStopCounterOn() == true) {
+        stopOrDecr();
+    }
     if (tickCounter % 6 == 0) {
         // Serial.println("Sixteenth");
     } 

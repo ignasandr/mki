@@ -113,3 +113,47 @@ uint8_t getNoteByPin(uint8_t pin) {
     }
     return 0;
 }
+
+uint16_t getRotaryValue() {
+    uint16_t value = analogRead(0);
+    return value;
+}
+
+uint8_t divisionTicks = 12;
+
+uint8_t getDivisionTicks() {
+    return divisionTicks;
+}
+
+void setDivisionTicks(uint8_t numberOfTicks) {
+    divisionTicks = numberOfTicks;
+}
+
+boolean stopCounterOn = false;
+
+boolean getStopCounterOn() {
+    return stopCounterOn;
+}
+
+void turnStopCounterOn(uint8_t numberOfTicks) {
+    stopCounterOn = true;
+    setStopCounter(numberOfTicks);
+}
+
+void turnStopCounterOff() {
+    stopCounterOn = false;
+}
+
+uint8_t stopCounter = 0;
+
+uint8_t getStopCounter() {
+    return stopCounter;
+}
+
+void decrStopCounter() {
+    stopCounter -= 1; 
+}
+
+void setStopCounter(uint8_t numberOfTicks) {
+    stopCounter = numberOfTicks;
+}

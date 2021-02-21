@@ -8,4 +8,6 @@ void timedStop();
 void play(uint8_t note, uint8_t vel, uint8_t chan);
 void stop();
 
+void stopOrDecr();
+
 #endif

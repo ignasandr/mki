@@ -15,7 +15,18 @@ void playFromArp() {
 
 void timedStop() {
     // Serial.println("Stopping in a bit");
-    stop();
+    uint8_t mappedValue = map(getRotaryValue(), 0, 1024, 1, getDivisionTicks());
+    turnStopCounterOn(mappedValue);
+}
+
+void stopOrDecr() {
+    if (getStopCounter() == 0) {
+        stop();
+        turnStopCounterOff();
+    } else {
+        Serial.println(getStopCounter());
+        decrStopCounter();
+    }
 }
 
 void play(uint8_t note, uint8_t vel, uint8_t chan) {
