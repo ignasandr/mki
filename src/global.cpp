@@ -157,3 +157,23 @@ void decrStopCounter() {
 void setStopCounter(uint8_t numberOfTicks) {
     stopCounter = numberOfTicks;
 }
+
+// Cooldown states
+
+// uint8_t defCooldown = 4;
+// uint8_t sampCooldown = 1;
+// unsigned long holdCooldown = 4000;
+
+uint16_t currentCooldown[] = {4, 1, 4000};
+
+uint16_t getCurrentCooldown(uint8_t mode) {
+    return currentCooldown[mode];
+}
+
+void incrCurrentCooldown(uint8_t mode) {
+    currentCooldown[mode] += 1;
+}
+
+void decrCurrentCooldown(uint8_t mode) {
+    currentCooldown[mode] -= 1;
+}

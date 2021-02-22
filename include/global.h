@@ -60,4 +60,9 @@ uint8_t getStopCounter();
 void decrStopCounter();
 void setStopCounter(uint8_t numberOfTicks);
 
+
+uint16_t getCurrentCooldown(uint8_t mode);
+void incrCurrentCooldown(uint8_t mode);
+void decrCurrentCooldown(uint8_t mode);
+
 #endif

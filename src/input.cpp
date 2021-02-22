@@ -46,3 +46,22 @@ void generateTicks() {
       handleTicks();
     }
 }
+
+void cooldownClock() {
+  static const uint16_t INTERVAL = 1; // ms
+	static unsigned long lastRefreshTime = 0; 
+
+  toggleCooldown(); // ::cooldown.cpp
+
+  uint8_t modes[] = {DEF, SAMP, HOLD};
+  if (millis() - lastRefreshTime > INTERVAL) {
+    for (auto mode: modes) {
+      if(cooldownClockOn(mode) == true) 
+        replenish(mode);
+    }
+    lastRefreshTime = millis();
+  }
+  // if(cooldownClockOn(DEF)) {
+  //   replenishDef();
+  // }
+}

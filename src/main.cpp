@@ -48,5 +48,5 @@ void loop() {
     }
   }
   generateTicks();
+  cooldownClock();
 }
-

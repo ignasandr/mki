@@ -6,10 +6,7 @@ void playFromArp() {
         uint8_t pin = getFromArp(getPlayheadPos());
         uint8_t note = getNoteByPin(pin);
         if (getCurrentlyPlaying() != 0) stop(); // check if a note is currently playing and stop it if that's the case
-        play(note, 127, getNoteChan()); // play the note
-        addToCurrentlyPlaying(note); // add
-        incrPlayhead();
-        timedStop();
+        gatedPlay(note, 127, getNoteChan()); // play the note
     }
 }
 
@@ -24,8 +21,32 @@ void stopOrDecr() {
         stop();
         turnStopCounterOff();
     } else {
-        Serial.println(getStopCounter());
         decrStopCounter();
+    }
+}
+
+void gatedPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+    switch(getMainMode()) {
+        case DEF:
+            if(getCurrentCooldown(DEF) > 0) {
+                play(note, vel, chan);
+                decrCurrentCooldown(DEF);
+                addToCurrentlyPlaying(note); // add
+                incrPlayhead();
+                timedStop();
+            }
+            break;
+        case SAMP:
+            if(getCurrentCooldown(SAMP) > 0) {
+                play(note, vel, chan);
+                decrCurrentCooldown(SAMP);
+            }
+            break;
+        case HOLD:
+            if(getCurrentCooldown(HOLD) > 0) {
+                play(note, vel, chan);
+                // hold timer on
+            }
     }
 }
 
