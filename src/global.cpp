@@ -114,6 +114,15 @@ uint8_t getNoteByPin(uint8_t pin) {
     return 0;
 }
 
+uint8_t getSnoteByPin(uint8_t pin) {
+    for(auto arr : pinNotes) {
+        if(arr->pin == pin) {
+            return arr->snote;
+        }
+    }
+    return 0;
+}
+
 uint16_t getRotaryValue() {
     uint16_t value = analogRead(0);
     return value;

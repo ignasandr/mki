@@ -5,7 +5,9 @@
 
 void playFromArp();
 void timedStop();
-void gatedPlay(uint8_t note, uint8_t vel, uint8_t chan);
+void defPlay(uint8_t note, uint8_t vel, uint8_t chan);
+void sampPlay(uint8_t note, uint8_t vel, uint8_t chan);
+void holdPlay(uint8_t note, uint8_t vel, uint8_t chan);
 void play(uint8_t note, uint8_t vel, uint8_t chan);
 void stop();
 

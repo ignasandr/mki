@@ -44,6 +44,7 @@ void addToCurrentlyPlaying(uint8_t note);
 void clearCurrentlyPlaying();
 
 uint8_t getNoteByPin(uint8_t pin);
+uint8_t getSnoteByPin(uint8_t pin);
 
 void printVec(std::vector<uint8_t> &vect);
 

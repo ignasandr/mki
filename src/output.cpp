@@ -6,47 +6,31 @@ void playFromArp() {
         uint8_t pin = getFromArp(getPlayheadPos());
         uint8_t note = getNoteByPin(pin);
         if (getCurrentlyPlaying() != 0) stop(); // check if a note is currently playing and stop it if that's the case
-        gatedPlay(note, 127, getNoteChan()); // play the note
+        defPlay(note, 127, getNoteChan()); // play the note
     }
 }
 
-void timedStop() {
-    // Serial.println("Stopping in a bit");
-    uint8_t mappedValue = map(getRotaryValue(), 0, 1024, 1, getDivisionTicks());
-    turnStopCounterOn(mappedValue);
-}
-
-void stopOrDecr() {
-    if (getStopCounter() == 0) {
-        stop();
-        turnStopCounterOff();
-    } else {
-        decrStopCounter();
+void defPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+    if(getCurrentCooldown(DEF) > 0) {
+        play(note, vel, chan);
+        decrCurrentCooldown(DEF);
+        addToCurrentlyPlaying(note); // add
+        incrPlayhead();
+        timedStop();
     }
 }
 
-void gatedPlay(uint8_t note, uint8_t vel, uint8_t chan) {
-    switch(getMainMode()) {
-        case DEF:
-            if(getCurrentCooldown(DEF) > 0) {
-                play(note, vel, chan);
-                decrCurrentCooldown(DEF);
-                addToCurrentlyPlaying(note); // add
-                incrPlayhead();
-                timedStop();
-            }
-            break;
-        case SAMP:
-            if(getCurrentCooldown(SAMP) > 0) {
-                play(note, vel, chan);
-                decrCurrentCooldown(SAMP);
-            }
-            break;
-        case HOLD:
-            if(getCurrentCooldown(HOLD) > 0) {
-                play(note, vel, chan);
-                // hold timer on
-            }
+void sampPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+    if(getCurrentCooldown(SAMP) > 0) {
+        play(note, vel, chan);
+        decrCurrentCooldown(SAMP);
+    }
+}
+
+void holdPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+    if(getCurrentCooldown(HOLD) > 0) {
+        play(note, vel, chan);
+        // hold timer on
     }
 }
 
@@ -58,6 +42,20 @@ void play(uint8_t note, uint8_t vel, uint8_t chan) {
     Serial.print(", ");
     Serial.print(chan);
     Serial.println(");");
+}
+
+void timedStop() {
+    uint8_t mappedValue = map(getRotaryValue(), 0, 1024, 1, getDivisionTicks());
+    turnStopCounterOn(mappedValue); // send rotary knob value scaled to current length of notes in ticks
+}
+
+void stopOrDecr() {
+    if (getStopCounter() == 0) {
+        stop();
+        turnStopCounterOff();
+    } else {
+        decrStopCounter();
+    }
 }
 
 void stop() {

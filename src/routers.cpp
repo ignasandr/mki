@@ -20,8 +20,7 @@ void noteRouter(uint8_t pin, uint8_t change) {
         case SAMP:
             switch(change) {
                 case PRESSED:
-                    Serial.print("playSample(pin) ");
-                    Serial.println(pin);
+                    sampPlay(getSnoteByPin(pin), 127, getSampChan());
                     break;
             }
             break;
@@ -86,20 +85,23 @@ void manageArpSequence(uint8_t pin, uint8_t change) {
     }
 }
 
-uint8_t tickCounter = 0;
 
 void handleTicks() {
+    static uint8_t tickCounter = 0;
     tickCounter++; 
     if (getStopCounterOn() == true) {
         stopOrDecr();
     }
+
     if (tickCounter % 6 == 0) {
         // Serial.println("Sixteenth");
     } 
+
     if (tickCounter % 12 == 0) {
         // Serial.println("Eight");
         playFromArp(); 
     }
+
     if (tickCounter == 24) {
       // Serial.println("QuarterNote");
       tickCounter = 0;
