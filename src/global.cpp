@@ -6,13 +6,10 @@ uint8_t mainMode = DEF;
 
 boolean intClock = false;
 
-uint8_t noteChan = 1;
-uint8_t sampChan = noteChan;
 
 vector<uint8_t> arpSequence;
 uint8_t playhead = 0;
 
-uint8_t currentlyPlaying = 0;
 
 struct note pinNotes[][3] =
 { //pin, note, snote
@@ -45,13 +42,7 @@ void intClockOff() {
     intClock = false;
 }
 
-uint8_t getNoteChan() {
-    return noteChan;
-}
 
-uint8_t getSampChan() {
-    return sampChan;
-}
 
 void addToArp(uint8_t pin) {
     if(find(arpSequence.begin(), arpSequence.end(), pin) == arpSequence.end()) {
@@ -77,6 +68,9 @@ uint8_t getPlayheadPos() {
    return playhead; 
 }
 
+
+// playhead actions
+
 void incrPlayhead() {
     playhead += 1;
 }
@@ -84,6 +78,10 @@ void incrPlayhead() {
 void resetPlayhead() {
     playhead = 0;
 }
+
+// currently playing actions
+
+uint8_t currentlyPlaying = 0;
 
 uint8_t getCurrentlyPlaying() {
     return currentlyPlaying;
@@ -96,6 +94,8 @@ void addToCurrentlyPlaying(uint8_t note) {
 void clearCurrentlyPlaying() {
     currentlyPlaying = 0;
 }
+
+// utils
 
 void printVec(vector<uint8_t> &vect) {
     Serial.print("-");
@@ -128,6 +128,23 @@ uint16_t getRotaryValue() {
     return value;
 }
 
+uint8_t getMappedRotaryValue() {
+    return map(getRotaryValue(), 0, 1024, 1, getDivisionTicks());
+}
+
+uint8_t noteChan = 1;
+uint8_t sampChan = noteChan;
+
+uint8_t getNoteChan() {
+    return noteChan;
+}
+
+uint8_t getSampChan() {
+    return sampChan;
+}
+
+// Arp stuff (2)
+
 uint8_t divisionTicks = 12;
 
 uint8_t getDivisionTicks() {
@@ -138,19 +155,35 @@ void setDivisionTicks(uint8_t numberOfTicks) {
     divisionTicks = numberOfTicks;
 }
 
+// stop counter
+
 boolean stopCounterOn = false;
+uint8_t noteToStop = 0;
+uint8_t noteToStopChan = 0;
 
 boolean getStopCounterOn() {
     return stopCounterOn;
 }
 
-void turnStopCounterOn(uint8_t numberOfTicks) {
+void turnStopCounterOn(uint8_t note, uint8_t chan, uint8_t numberOfTicks) {
     stopCounterOn = true;
     setStopCounter(numberOfTicks);
+    noteToStop = note;
+    noteToStopChan = chan; 
 }
 
 void turnStopCounterOff() {
     stopCounterOn = false;
+    noteToStop = 0;
+    noteToStopChan = 0;
+}
+
+uint8_t getNoteToStop() {
+    return noteToStop;
+}
+
+uint8_t getNoteToStopChan() {
+    return noteToStopChan;
 }
 
 uint8_t stopCounter = 0;
@@ -167,11 +200,7 @@ void setStopCounter(uint8_t numberOfTicks) {
     stopCounter = numberOfTicks;
 }
 
-// Cooldown states
-
-// uint8_t defCooldown = 4;
-// uint8_t sampCooldown = 1;
-// unsigned long holdCooldown = 4000;
+// Cooldown stuff 
 
 uint16_t currentCooldown[] = {4, 1, 4000};
 

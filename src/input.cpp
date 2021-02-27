@@ -61,7 +61,4 @@ void cooldownClock() {
     }
     lastRefreshTime = millis();
   }
-  // if(cooldownClockOn(DEF)) {
-  //   replenishDef();
-  // }
 }

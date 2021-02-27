@@ -27,12 +27,12 @@ void noteRouter(uint8_t pin, uint8_t change) {
         case HOLD:
             switch(change) {
                 case PRESSED:
-                    Serial.print("playContinuous(pin)");
-                    Serial.println(pin);
+                    holdPlay(getNoteByPin(pin), 110, getNoteChan());
                     break;
                 case RELEASED:
-                    Serial.print("StopIfStillPlaying(pin)");
-                    Serial.println(pin);
+                    if (getCurrentlyPlaying() == getNoteByPin(pin)) {
+                        stop(getNoteByPin(pin), getNoteChan());
+                    } 
                     break;
             }
     }

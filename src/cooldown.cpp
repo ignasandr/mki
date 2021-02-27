@@ -11,27 +11,23 @@ boolean cooldownClockOn(uint8_t mode) {
 }
 
 void toggleCooldown() {
-    if (getCurrentCooldown(DEF) < cooldownMaxUnits[DEF] && getArpSize() == 0) {
+    if (getCurrentCooldown(DEF) < cooldownMaxUnits[DEF] && getArpSize() == 0) { // need to implement - if (getMainMode != DEF), then also replenish
         if (cooldownClock[DEF] == false) {
             cooldownClock[DEF] = true;
-            Serial.println("turning on DEF cooldown clock");
         }
     } else {
         if (cooldownClock[DEF] == true) {
             cooldownClock[DEF] = false;
-            Serial.println("turning off DEF cooldown clock");
         }
     }
 
     if (getCurrentCooldown(SAMP) < cooldownMaxUnits[SAMP]) {
         if (cooldownClock[SAMP] == false) {
             cooldownClock[SAMP] = true;
-            Serial.println("turning on SAMP cooldown clock");
         }
     } else {
         if (cooldownClock[SAMP] == true) {
             cooldownClock[SAMP] = false;
-            Serial.println("turning off SAMP cooldown clock");
         }
     }
 

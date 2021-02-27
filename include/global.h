@@ -27,8 +27,6 @@ boolean getIntClock();
 void intClockOn();
 void intClockOff();
 
-uint8_t getNoteChan();
-uint8_t getSampChan();
 
 void addToArp(uint8_t pin);
 void removeFromArp(uint8_t pin);
@@ -43,19 +41,23 @@ uint8_t getCurrentlyPlaying();
 void addToCurrentlyPlaying(uint8_t note);
 void clearCurrentlyPlaying();
 
+//utils
+void printVec(std::vector<uint8_t> &vect);
 uint8_t getNoteByPin(uint8_t pin);
 uint8_t getSnoteByPin(uint8_t pin);
-
-void printVec(std::vector<uint8_t> &vect);
-
 uint16_t getRotaryValue();
+uint8_t getMappedRotaryValue();
+uint8_t getNoteChan();
+uint8_t getSampChan();
 
 uint8_t getDivisionTicks();
 void setDivisionTicks(uint8_t numberOfTicks);
 
 boolean getStopCounterOn();
-void turnStopCounterOn(uint8_t numberOfTicks);
+void turnStopCounterOn(uint8_t note, uint8_t chan, uint8_t numberOfTicks);
 void turnStopCounterOff();
+uint8_t getNoteToStop();
+uint8_t getNoteToStopChan();
 
 uint8_t getStopCounter();
 void decrStopCounter();
