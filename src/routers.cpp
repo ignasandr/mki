@@ -66,7 +66,10 @@ void shiftRouter(uint8_t pin, uint8_t change) {
             if (entry.pin == pin) {
                 if (entry.change == change) {
                     setMainMode(entry.next_state);
-                    if (getCurrentlyPlaying() > 0) stopCurrentlyPlaying();
+                    if (getCurrentlyPlaying() > 0) {
+                        stopCurrentlyPlaying();
+                        turnStopCounterOff();
+                    }
                     Serial.print("The state switched to ");
                     Serial.println(entry.next_state);
                 }

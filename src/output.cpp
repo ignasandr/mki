@@ -59,6 +59,7 @@ void stopOrDecr() {
         turnStopCounterOff();
     } else {
         decrStopCounter();
+        Serial.println(getStopCounter());
     }
 }
 
