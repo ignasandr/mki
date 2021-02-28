@@ -1,40 +1,54 @@
 #include <cooldown.h>
 
-uint16_t cooldownMaxUnits[] = {4, 1, 4000}; //maximum cooldown values for DEF, SAMP, HOLD modes
+uint16_t cooldownMaxUnits[] = {4, 1, 1600}; //maximum cooldown values for DEF, SAMP, HOLD modes
 boolean cooldownClock[] = {false, false, false}; // DEF, SAMP, HOLD
 
 unsigned long cooldownTime[] = {0, 0, 0};
-unsigned long cooldownThreshold[] = {300, 6000, 1}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, HOLD}
+unsigned long cooldownThreshold[] = {300, 6000, 4}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, HOLD}
 
 boolean cooldownClockOn(uint8_t mode) {
     return cooldownClock[mode];
 }
 
-void toggleCooldown() {
-    if (getCurrentCooldown(DEF) < cooldownMaxUnits[DEF] && getArpSize() == 0) { // need to implement - if (getMainMode != DEF), then also replenish
-        if (cooldownClock[DEF] == false) {
-            cooldownClock[DEF] = true;
-        }
-    } else {
-        if (cooldownClock[DEF] == true) {
-            cooldownClock[DEF] = false;
-        }
-    }
+struct cooldownStateTable cst[] = {
+// Target mode || Current Mode || Buttons pressed || Note Playing || Current State || Return State
+    {DEF, true, true, false},
+    {DEF, true, false, false},
+    {DEF, false, false, true},
+    {DEF, false, true, false},
+    {SAMP, true, true, true},
+    {SAMP, true, false, true},
+    {SAMP, false, false, true},
+    {SAMP, false, true, true},
+    {HOLD, true, true, false},
+    {HOLD, true, false, true},
+    {HOLD, false, false, true},
+    {HOLD, false, true, false}
+};
 
-    if (getCurrentCooldown(SAMP) < cooldownMaxUnits[SAMP]) {
-        if (cooldownClock[SAMP] == false) {
-            cooldownClock[SAMP] = true;
+void toggleCooldown(uint8_t mode) {
+    if (getCurrentCooldown(mode) < cooldownMaxUnits[mode]) {
+        //check if eligible for replenishment
+        if(getMainMode() != mode) {
+            if(cooldownClock[mode] == false) {
+                cooldownClock[mode] = true;
+            }
+        } else {
+            for(auto entry: cst) {
+                if(entry.mode == mode) {
+                    if((getArpSize() > 0) == entry.buttonsPressed && (getCurrentlyPlaying() > 0) == entry.notePlaying) {
+                        if(cooldownClock[mode] != entry.state) {
+                            cooldownClock[mode] = entry.state;
+                        }
+                    }
+                }
+            }
         }
-    } else {
-        if (cooldownClock[SAMP] == true) {
-            cooldownClock[SAMP] = false;
-        }
-    }
 
-    if (getCurrentCooldown(HOLD) < cooldownMaxUnits[HOLD]) {
-        cooldownClock[HOLD] = true;
     } else {
-        cooldownClock[HOLD] = false;
+        if (cooldownClock[mode] == true) {
+            cooldownClock[mode] = false;
+        }
     }
 }
 
@@ -42,8 +56,15 @@ void replenish(uint8_t mode) {
     cooldownTime[mode] += 1;
     if(cooldownTime[mode] >= cooldownThreshold[mode]) {
         incrCurrentCooldown(mode);
-        Serial.println(getCurrentCooldown(mode));
         cooldownTime[mode] = 0;
     }
 }
 
+void drainHold() {
+    if(getCurrentCooldown(HOLD) > 0) {
+        decrCurrentCooldown(HOLD);
+    } else {
+        stopCurrentlyPlaying();
+        turnHoldAutoDecrOff();
+    }
+}

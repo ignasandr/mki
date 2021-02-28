@@ -32,6 +32,8 @@ void noteRouter(uint8_t pin, uint8_t change) {
                 case RELEASED:
                     if (getCurrentlyPlaying() == getNoteByPin(pin)) {
                         stop(getNoteByPin(pin), getNoteChan());
+                        clearCurrentlyPlaying();
+                        turnHoldAutoDecrOff();
                     } 
                     break;
             }
@@ -69,6 +71,9 @@ void shiftRouter(uint8_t pin, uint8_t change) {
                     if (getCurrentlyPlaying() > 0) {
                         stopCurrentlyPlaying();
                         turnStopCounterOff();
+                        if (getHoldAutoDecrOn() == true) {
+                            turnHoldAutoDecrOff();
+                        }
                     }
                     Serial.print("The state switched to ");
                     Serial.println(entry.next_state);

@@ -51,14 +51,21 @@ void cooldownClock() {
   static const uint16_t INTERVAL = 1; // ms
 	static unsigned long lastRefreshTime = 0; 
 
-  toggleCooldown(); // ::cooldown.cpp
-
   uint8_t modes[] = {DEF, SAMP, HOLD};
+
+  for(auto mode: modes) {
+    toggleCooldown(mode);
+  }
+  
   if (millis() - lastRefreshTime > INTERVAL) {
+    if(getHoldAutoDecrOn() == true) {
+      drainHold();
+    }
     for (auto mode: modes) {
       if(cooldownClockOn(mode) == true) 
         replenish(mode);
     }
     lastRefreshTime = millis();
   }
+
 }

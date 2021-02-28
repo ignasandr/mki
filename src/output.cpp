@@ -28,12 +28,13 @@ void sampPlay(uint8_t note, uint8_t vel, uint8_t chan) {
 }
 
 void holdPlay(uint8_t note, uint8_t vel, uint8_t chan) {
-    if(getCurrentCooldown(HOLD) > 0) {
+    if(getCurrentCooldown(HOLD) > 800) {
         if(getCurrentlyPlaying() > 0 && getCurrentlyPlaying() != note) {
             timedStop(getCurrentlyPlaying(), getNoteChan(), 1);
         }
         play(note, vel, chan);
         addToCurrentlyPlaying(note);
+        turnHoldAutoDecrOn();
         // hold timer on
     }
 }
@@ -49,7 +50,7 @@ void play(uint8_t note, uint8_t vel, uint8_t chan) {
 }
 
 void timedStop(uint8_t note, uint8_t chan, uint8_t numberOfTicks) {
-    turnStopCounterOn(note, chan, numberOfTicks);
+    turnStopCounterOn(note, chan, numberOfTicks); // also set getNoteToStop() and getNoteToStopChan()
 }
 
 void stopOrDecr() {
@@ -59,7 +60,6 @@ void stopOrDecr() {
         turnStopCounterOff();
     } else {
         decrStopCounter();
-        Serial.println(getStopCounter());
     }
 }
 

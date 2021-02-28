@@ -202,7 +202,7 @@ void setStopCounter(uint8_t numberOfTicks) {
 
 // Cooldown stuff 
 
-uint16_t currentCooldown[] = {4, 1, 4000};
+uint16_t currentCooldown[] = {4, 1, 1600};
 
 uint16_t getCurrentCooldown(uint8_t mode) {
     return currentCooldown[mode];
@@ -214,4 +214,20 @@ void incrCurrentCooldown(uint8_t mode) {
 
 void decrCurrentCooldown(uint8_t mode) {
     currentCooldown[mode] -= 1;
+}
+
+// Hold note stuff
+
+boolean holdAutoDecrOn = false;
+
+boolean getHoldAutoDecrOn() {
+    return holdAutoDecrOn;
+}
+
+void turnHoldAutoDecrOn() {
+    holdAutoDecrOn = true;
+}
+
+void turnHoldAutoDecrOff() {
+    holdAutoDecrOn = false;
 }
