@@ -67,9 +67,12 @@ void setStopCounter(uint8_t numberOfTicks);
 uint16_t getCurrentCooldown(uint8_t mode);
 void incrCurrentCooldown(uint8_t mode);
 void decrCurrentCooldown(uint8_t mode);
+uint16_t getMaxCooldown(uint8_t mode);
 
 boolean getHoldAutoDecrOn();
 void turnHoldAutoDecrOn();
 void turnHoldAutoDecrOff();
+
+uint8_t calculateVelocity(uint8_t mode);
 
 #endif

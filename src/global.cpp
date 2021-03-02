@@ -6,10 +6,19 @@ uint8_t mainMode = DEF;
 
 boolean intClock = false;
 
+uint8_t noteChan = 1;
+uint8_t sampChan = noteChan;
 
 vector<uint8_t> arpSequence;
 uint8_t playhead = 0;
 
+uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
+
+const uint16_t maxCooldown[] = {4, 1, 1600};
+uint16_t currentCooldown[] = {4, 1, 1600}; // starting cooldown values for DEF, SAMP, HOLD
+
+const uint8_t minVelocity[] = {80, 127, 20};
+const uint8_t maxVelocity[] = {117, 127, 110};
 
 struct note pinNotes[][3] =
 { //pin, note, snote
@@ -132,8 +141,6 @@ uint8_t getMappedRotaryValue() {
     return map(getRotaryValue(), 0, 1024, 1, getDivisionTicks());
 }
 
-uint8_t noteChan = 1;
-uint8_t sampChan = noteChan;
 
 uint8_t getNoteChan() {
     return noteChan;
@@ -145,7 +152,6 @@ uint8_t getSampChan() {
 
 // Arp stuff (2)
 
-uint8_t divisionTicks = 12;
 
 uint8_t getDivisionTicks() {
     return divisionTicks;
@@ -202,7 +208,6 @@ void setStopCounter(uint8_t numberOfTicks) {
 
 // Cooldown stuff 
 
-uint16_t currentCooldown[] = {4, 1, 1600};
 
 uint16_t getCurrentCooldown(uint8_t mode) {
     return currentCooldown[mode];
@@ -214,6 +219,10 @@ void incrCurrentCooldown(uint8_t mode) {
 
 void decrCurrentCooldown(uint8_t mode) {
     currentCooldown[mode] -= 1;
+}
+
+uint16_t getMaxCooldown(uint8_t mode) {
+    return maxCooldown[mode];
 }
 
 // Hold note stuff
@@ -230,4 +239,18 @@ void turnHoldAutoDecrOn() {
 
 void turnHoldAutoDecrOff() {
     holdAutoDecrOn = false;
+}
+
+// Calculate velocity
+
+uint8_t calculateVelocity(uint8_t mode) {
+    uint8_t velocity = 1;
+    velocity = map(getCurrentCooldown(mode), 1, getMaxCooldown(mode), minVelocity[mode], maxVelocity[mode]);
+    return velocity;
+    // switch(getMainMode()) {
+    //     case(DEF):
+    //         velocity = map(getCurrentCooldown(DEF), 0, getMaxCooldown(DEF), 70, getCurrentCooldown(DEF));
+    //         break;
+    //     case(HOLD):
+    // }
 }

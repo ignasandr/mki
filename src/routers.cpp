@@ -20,14 +20,14 @@ void noteRouter(uint8_t pin, uint8_t change) {
         case SAMP:
             switch(change) {
                 case PRESSED:
-                    sampPlay(getSnoteByPin(pin), 127, getSampChan());
+                    sampPlay(getSnoteByPin(pin), getSampChan());
                     break;
             }
             break;
         case HOLD:
             switch(change) {
                 case PRESSED:
-                    holdPlay(getNoteByPin(pin), 110, getNoteChan());
+                    holdPlay(getNoteByPin(pin), getNoteChan());
                     break;
                 case RELEASED:
                     if (getCurrentlyPlaying() == getNoteByPin(pin)) {

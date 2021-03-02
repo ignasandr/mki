@@ -6,13 +6,13 @@ void playFromArp() {
         uint8_t pin = getFromArp(getPlayheadPos());
         uint8_t note = getNoteByPin(pin);
         if (getCurrentlyPlaying() != 0) stopCurrentlyPlaying(); // check if a note is currently playing and stop it if that's the case
-        defPlay(note, 127, getNoteChan()); // play the note
+        defPlay(note, getNoteChan()); // play the note
     }
 }
 
-void defPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+void defPlay(uint8_t note, uint8_t chan) {
     if(getCurrentCooldown(DEF) > 0) {
-        play(note, vel, chan);
+        play(note, calculateVelocity(DEF), chan);
         decrCurrentCooldown(DEF);
         addToCurrentlyPlaying(note); // add
         incrPlayhead();
@@ -20,19 +20,19 @@ void defPlay(uint8_t note, uint8_t vel, uint8_t chan) {
     }
 }
 
-void sampPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+void sampPlay(uint8_t note, uint8_t chan) {
     if(getCurrentCooldown(SAMP) > 0) {
-        play(note, vel, chan);
+        play(note, 127, chan);
         decrCurrentCooldown(SAMP);
     }
 }
 
-void holdPlay(uint8_t note, uint8_t vel, uint8_t chan) {
+void holdPlay(uint8_t note, uint8_t chan) {
     if(getCurrentCooldown(HOLD) > 800) {
         if(getCurrentlyPlaying() > 0 && getCurrentlyPlaying() != note) {
             timedStop(getCurrentlyPlaying(), getNoteChan(), 1);
         }
-        play(note, vel, chan);
+        play(note, calculateVelocity(HOLD), chan);
         addToCurrentlyPlaying(note);
         turnHoldAutoDecrOn();
         // hold timer on

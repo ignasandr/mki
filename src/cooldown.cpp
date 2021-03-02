@@ -1,6 +1,5 @@
 #include <cooldown.h>
 
-uint16_t cooldownMaxUnits[] = {4, 1, 1600}; //maximum cooldown values for DEF, SAMP, HOLD modes
 boolean cooldownClock[] = {false, false, false}; // DEF, SAMP, HOLD
 
 unsigned long cooldownTime[] = {0, 0, 0};
@@ -11,7 +10,7 @@ boolean cooldownClockOn(uint8_t mode) {
 }
 
 struct cooldownStateTable cst[] = {
-// Target mode || Current Mode || Buttons pressed || Note Playing || Current State || Return State
+// Target mode || Buttons pressed || Note Playing || Return State(Replenishment clock on)
     {DEF, true, true, false},
     {DEF, true, false, false},
     {DEF, false, false, true},
@@ -27,7 +26,7 @@ struct cooldownStateTable cst[] = {
 };
 
 void toggleCooldown(uint8_t mode) {
-    if (getCurrentCooldown(mode) < cooldownMaxUnits[mode]) {
+    if (getCurrentCooldown(mode) < getMaxCooldown(mode)) {
         //check if eligible for replenishment
         if(getMainMode() != mode) {
             if(cooldownClock[mode] == false) {
