@@ -26,8 +26,8 @@ const uint8_t initPinModes[][2] =
 vector<struct button> buttonState;
 
 void setup() {
-  Serial.begin(57600);
-  Serial.println("Serial working");
+  Serial.begin(31250);
+  // Serial.println("Serial working");
 
   for (auto arr : initPinModes) {
     init(arr[0], arr[1]);

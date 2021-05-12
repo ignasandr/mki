@@ -44,12 +44,12 @@ void switchRouter(uint8_t pin, uint8_t change) {
     switch(change) {
         case PRESSED:
             intClockOn();
-            Serial.println("Internal Clock ON");
+            // Serial.println("Internal Clock ON");
             // Serial.println("16th notes");
             break;
         case RELEASED:
             intClockOff();
-            Serial.println("Internal Clock OFF");
+            // Serial.println("Internal Clock OFF");
             // Serial.println("8th notes");
             break;
     }
@@ -75,8 +75,8 @@ void shiftRouter(uint8_t pin, uint8_t change) {
                             turnHoldAutoDecrOff();
                         }
                     }
-                    Serial.print("The state switched to ");
-                    Serial.println(entry.next_state);
+                    // Serial.print("The state switched to ");
+                    // Serial.println(entry.next_state);
                 }
             }
         }

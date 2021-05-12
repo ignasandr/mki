@@ -6,8 +6,8 @@ uint8_t mainMode = DEF;
 
 boolean intClock = false;
 
-uint8_t noteChan = 1;
-uint8_t sampChan = noteChan;
+uint8_t noteChan = 2;
+uint8_t sampChan = 5;
 
 vector<uint8_t> arpSequence;
 uint8_t playhead = 0;
@@ -22,13 +22,13 @@ const uint8_t maxVelocity[] = {117, 127, 110};
 
 struct note pinNotes[][3] =
 { //pin, note, snote
-    {2, 36, 47},
-    {3, 37, 48},
-    {4, 38, 49},
-    {5, 39, 50},
-    {6, 40, 51},
-    {7, 41, 52},
-    {8, 42, 53}
+    {2, 36, 100},
+    {3, 38, 101},
+    {4, 41, 102},
+    {5, 43, 103},
+    {6, 46, 104},
+    {7, 47, 105},
+    {8, 48, 106}
 };
 
 uint8_t getMainMode() {
@@ -57,12 +57,12 @@ void addToArp(uint8_t pin) {
     if(find(arpSequence.begin(), arpSequence.end(), pin) == arpSequence.end()) {
         arpSequence.push_back(pin);
     }
-    printVec(arpSequence);
+    // printVec(arpSequence);
 }
 
 void removeFromArp(uint8_t pin) {
     arpSequence.erase(std::remove(arpSequence.begin(), arpSequence.end(), pin), arpSequence.end());
-    printVec(arpSequence);
+    // printVec(arpSequence);
 }
 
 uint8_t getArpSize() {
