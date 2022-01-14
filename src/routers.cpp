@@ -47,14 +47,10 @@ void noteRouter(uint8_t pin, uint8_t change) {
 void switchRouter(uint8_t pin, uint8_t change) {
     switch(change) {
         case PRESSED:
-            intClockOn();
-            // Serial.println("Internal Clock ON");
-            // Serial.println("16th notes");
+            setDivisionTicks(6); // 16th notes
             break;
         case RELEASED:
-            intClockOff();
-            // Serial.println("Internal Clock OFF");
-            // Serial.println("8th notes");
+            setDivisionTicks(12); // 8th notes
             break;
     }
 }
@@ -96,11 +92,8 @@ void ledRouter() {
                 }
                 else {
                     analogWrite(ledUp, 0);
-                    analogWrite(ledDown, (255 / (getMaxCooldown(DEF) / 2)) * (getCurrentCooldown(DEF) - getMaxCooldown(DEF)/2));
+                    analogWrite(ledDown, (255 / (getMaxCooldown(DEF) / 2)) * (getCurrentCooldown(DEF)));
                 }
-                // if more than half of max cooldown, 
-                // analogWrite(ledUp, 255);
-                // analogWrite(ledDown, 255);
             break;
             case SAMP:
                 analogWrite(ledUp, 0);
@@ -133,16 +126,15 @@ void handleTicks() {
     }
 
     if (tickCounter % 6 == 0) {
-        // Serial.println("Sixteenth");
+        if(getDivisionTicks() == 6) playFromArp(); // 16th notes
     } 
 
     if (tickCounter % 12 == 0) {
-        // Serial.println("Eight");
-        playFromArp(); 
+        if(getDivisionTicks() == 12) playFromArp(); // 8th notes
     }
 
     if (tickCounter == 24) {
-      // Serial.println("QuarterNote");
+        // 4tr notes
       tickCounter = 0;
     }
 }
