@@ -15,6 +15,7 @@ void mainRouter(uint8_t pin, uint8_t change);
 void noteRouter(uint8_t pin, uint8_t change);
 void switchRouter(uint8_t pin, uint8_t change);
 void shiftRouter(uint8_t pin, uint8_t change);
+void ledRouter();
 
 void manageArpSequence(uint8_t pin, uint8_t change); 
 

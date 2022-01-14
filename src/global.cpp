@@ -14,11 +14,11 @@ uint8_t playhead = 0;
 
 uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
 
-const uint16_t maxCooldown[] = {4, 1, 1600};
-uint16_t currentCooldown[] = {4, 1, 1600}; // starting cooldown values for DEF, SAMP, HOLD
+const uint16_t maxCooldown[] = {6, 1, 1600};
+uint16_t currentCooldown[] = {6, 1, 1600}; // starting cooldown values for DEF, SAMP, HOLD
 
 const uint8_t minVelocity[] = {80, 127, 20};
-const uint8_t maxVelocity[] = {117, 127, 110};
+const uint8_t maxVelocity[] = {116, 127, 110};
 
 struct note pinNotes[][3] =
 { //pin, note, snote

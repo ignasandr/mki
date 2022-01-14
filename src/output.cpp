@@ -40,17 +40,17 @@ void holdPlay(uint8_t note, uint8_t chan) {
 }
 
 void play(uint8_t note, uint8_t vel, uint8_t chan) {
-    // Serial.print("MIDI.sendNoteOn(");
-    // Serial.print(note);
-    // Serial.print(", ");
-    // Serial.print(vel);
-    // Serial.print(", ");
-    // Serial.print(chan);
-    // Serial.println(");");
-    int command = chan + 143;
-    Serial.write(command);
-    Serial.write(note);
-    Serial.write(vel);
+    Serial.print("MIDI.sendNoteOn(");
+    Serial.print(note);
+    Serial.print(", ");
+    Serial.print(vel);
+    Serial.print(", ");
+    Serial.print(chan);
+    Serial.println(");");
+    // int command = chan + 143;
+    // Serial.write(command);
+    // Serial.write(note);
+    // Serial.write(vel);
 }
 
 void timedStop(uint8_t note, uint8_t chan, uint8_t numberOfTicks) {

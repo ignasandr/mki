@@ -2,7 +2,7 @@
 #include <global.h>
 #include <input.h>
 #include <routers.h>
-#include <StandardCplusplus.h>
+#include <ArduinoSTL.h>
 #include <vector>
 
 using namespace std;
@@ -26,8 +26,9 @@ const uint8_t initPinModes[][2] =
 vector<struct button> buttonState;
 
 void setup() {
-  Serial.begin(31250);
-  // Serial.println("Serial working");
+  // Serial.begin(31250); // MIDI Serial
+  Serial.begin(9600);
+  Serial.println("Serial working");
 
   for (auto arr : initPinModes) {
     init(arr[0], arr[1]);
@@ -49,4 +50,5 @@ void loop() {
   }
   generateTicks();
   cooldownClock();
+  ledRouter();
 }

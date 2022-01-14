@@ -1,5 +1,8 @@
 #include <routers.h>
 
+uint8_t ledUp = 10;
+uint8_t ledDown = 11;
+
 void mainRouter(uint8_t pin, uint8_t change) {
     switch(pin) {
         case 2 ... 8: 
@@ -23,7 +26,7 @@ void noteRouter(uint8_t pin, uint8_t change) {
                     sampPlay(getSnoteByPin(pin), getSampChan());
                     break;
             }
-            break;
+        break;
         case HOLD:
             switch(change) {
                 case PRESSED:
@@ -37,6 +40,7 @@ void noteRouter(uint8_t pin, uint8_t change) {
                     } 
                     break;
             }
+        break;
     }
 }
 
@@ -81,6 +85,32 @@ void shiftRouter(uint8_t pin, uint8_t change) {
             }
         }
     }
+}
+
+void ledRouter() {
+    switch(getMainMode()) {
+            case DEF:
+                if(getCurrentCooldown(DEF) >= getMaxCooldown(DEF)/2) {
+                    analogWrite(ledDown, 255);
+                    analogWrite(ledUp, (255 / (getMaxCooldown(DEF) / 2)) * (getCurrentCooldown(DEF) - getMaxCooldown(DEF)/2));
+                }
+                else {
+                    analogWrite(ledUp, 0);
+                    analogWrite(ledDown, (255 / (getMaxCooldown(DEF) / 2)) * (getCurrentCooldown(DEF) - getMaxCooldown(DEF)/2));
+                }
+                // if more than half of max cooldown, 
+                // analogWrite(ledUp, 255);
+                // analogWrite(ledDown, 255);
+            break;
+            case SAMP:
+                analogWrite(ledUp, 0);
+                analogWrite(ledDown, 255);
+            break;
+            case HOLD:
+                analogWrite(ledUp, 255);
+                analogWrite(ledDown, 0);
+            break;
+        }
 }
 
 void manageArpSequence(uint8_t pin, uint8_t change) {
