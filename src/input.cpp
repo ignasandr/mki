@@ -40,8 +40,7 @@ void generateTicks() {
 
    uint8_t elapsed_time = current_time - last_time;
     
-    if(elapsed_time >= ticks && getIntClock() == true)
-    {
+    if(elapsed_time >= ticks) {
       last_time = current_time;
       handleTicks();
     }
