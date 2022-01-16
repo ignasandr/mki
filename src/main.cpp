@@ -38,6 +38,9 @@ void setup() {
         buttonState.push_back(newButton);
       }
   }
+  if(digitalRead(9) == LOW) {
+    setDivisionTicks(6); // if Switch up, set arp speed to 16th
+  }
 }
 
 

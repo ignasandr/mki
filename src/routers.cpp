@@ -97,7 +97,12 @@ void ledRouter() {
             break;
             case SAMP:
                 analogWrite(ledUp, 0);
-                analogWrite(ledDown, 255);
+                if(getCurrentCooldown(SAMP) > 0) {
+                    analogWrite(ledDown, 255);
+                }
+                else {
+                    analogWrite(ledDown, 0);
+                }
             break;
             case HOLD:
                 analogWrite(ledUp, 255);
