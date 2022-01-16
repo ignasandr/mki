@@ -7,29 +7,43 @@ uint8_t mainMode = DEF;
 boolean intClock = false;
 
 uint8_t noteChan = 2;
+uint8_t seqChan = 3;
 uint8_t sampChan = 5;
 
 vector<uint8_t> arpSequence;
 uint8_t playhead = 0;
 
+uint8_t seqPlayhead = 0;
+
 uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
 
-const uint16_t maxCooldown[] = {6, 1, 1600};
-uint16_t currentCooldown[] = {6, 1, 1600}; // starting cooldown values for DEF, SAMP, HOLD
+const uint16_t maxCooldown[] = {6, 1, 1};
+uint16_t currentCooldown[] = {6, 1, 1}; // starting cooldown values for DEF, SAMP, SEQ
 
 const uint8_t minVelocity[] = {80, 127, 20};
 const uint8_t maxVelocity[] = {116, 127, 110};
 
-struct note pinNotes[][3] =
-{ //pin, note, snote
-    {2, 36, 100},
-    {3, 38, 101},
-    {4, 41, 102},
-    {5, 43, 103},
-    {6, 46, 104},
-    {7, 47, 105},
-    {8, 48, 106}
+struct note pinNotes[][6] =
+{ //pin, note, sampnote, seqnote, seqlength, seqnumber
+    {2, 36, 100, 50, 4, 0},
+    {3, 38, 101, 51, 1, 1},
+    {4, 41, 102, 52, 1, 2},
+    {5, 43, 103, 53, 4, 3},
+    {6, 46, 104, 54, 1, 4},
+    {7, 47, 105, 55, 1, 5},
+    {8, 48, 106, 56, 4, 6}
 };
+
+const uint8_t drumSeqs[][16] = {
+    {127, 120, 114, 102, 96, 80, 70, 60, 50, 49, 48, 47, 36, 35, 31, 20},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}
+};
+
 
 uint8_t getMainMode() {
     return mainMode;
@@ -88,6 +102,20 @@ void resetPlayhead() {
     playhead = 0;
 }
 
+// sequence playhead
+
+uint8_t getSeqPlayheadPos() {
+    return seqPlayhead;
+}
+
+void incrSeqPlayhead() {
+    seqPlayhead += 1;
+}
+
+void resetSeqPlayhead() {
+    seqPlayhead = 0;
+}
+
 // currently playing actions
 
 uint8_t currentlyPlaying = 0;
@@ -123,10 +151,37 @@ uint8_t getNoteByPin(uint8_t pin) {
     return 0;
 }
 
-uint8_t getSnoteByPin(uint8_t pin) {
+uint8_t getSampNoteByPin(uint8_t pin) {
     for(auto arr : pinNotes) {
         if(arr->pin == pin) {
-            return arr->snote;
+            return arr->sampnote;
+        }
+    }
+    return 0;
+}
+
+uint8_t getSeqNoteByPin(uint8_t pin) {
+    for(auto arr : pinNotes) {
+        if(arr->pin == pin) {
+            return arr->seqnote;
+        }
+    }
+    return 0;
+}
+
+uint8_t getSeqLengthByPin(uint8_t pin) {
+    for(auto arr : pinNotes) {
+        if(arr->pin == pin) {
+            return arr->seqlength;
+        }
+    }
+    return 0;
+}
+
+uint8_t getSeqNumberByPin(uint8_t pin) {
+    for(auto arr : pinNotes) {
+        if(arr->pin == pin) {
+            return arr->seqnumber;
         }
     }
     return 0;
@@ -227,19 +282,62 @@ uint16_t getMaxCooldown(uint8_t mode) {
 
 // Hold note stuff
 
-boolean holdAutoDecrOn = false;
+// boolean holdAutoDecrOn = false;
 
-boolean getHoldAutoDecrOn() {
-    return holdAutoDecrOn;
+// boolean getHoldAutoDecrOn() {
+//     return holdAutoDecrOn;
+// }
+
+// void turnHoldAutoDecrOn() {
+//     holdAutoDecrOn = true;
+// }
+
+// void turnHoldAutoDecrOff() {
+//     holdAutoDecrOn = false;
+// }
+
+// Sequence stuff
+uint8_t seqBarsLeft = 0;
+uint8_t currentSeqNote = 0;
+uint8_t currentSeqNumber = 0;
+
+uint8_t getSeqBarsLeft() {
+    return seqBarsLeft;
 }
 
-void turnHoldAutoDecrOn() {
-    holdAutoDecrOn = true;
+void setSeqBarsLeft(uint8_t newBars) {
+    seqBarsLeft = newBars;
 }
 
-void turnHoldAutoDecrOff() {
-    holdAutoDecrOn = false;
+void decrSeqBarsLeft() {
+    seqBarsLeft -= 1;
 }
+
+uint8_t getCurrentSeqNote() {
+    return currentSeqNote;
+}
+
+void setCurrentSeqNote(uint8_t newNote) {
+    currentSeqNote = newNote;
+}
+
+uint8_t getCurrentSeqNumber() {
+    return currentSeqNumber;
+}
+
+void setCurrentSeqNumber(uint8_t newNumber) {
+    currentSeqNumber = newNumber;
+}
+
+uint8_t getSeqChan() {
+    return seqChan;
+}
+
+uint8_t getSeqHit() {
+    return drumSeqs[getCurrentSeqNumber()][getSeqPlayheadPos()];
+}
+
+
 
 // Calculate velocity
 

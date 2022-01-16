@@ -3,7 +3,7 @@
 boolean cooldownClock[] = {false, false, false}; // DEF, SAMP, HOLD
 
 unsigned long cooldownTime[] = {0, 0, 0};
-unsigned long cooldownThreshold[] = {300, 6000, 4}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, HOLD}
+unsigned long cooldownThreshold[] = {300, 6000, 6000}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, SEQ}
 
 boolean cooldownClockOn(uint8_t mode) {
     return cooldownClock[mode];
@@ -19,10 +19,10 @@ struct cooldownStateTable cst[] = {
     {SAMP, true, false, true},
     {SAMP, false, false, true},
     {SAMP, false, true, true},
-    {HOLD, true, true, false},
-    {HOLD, true, false, true},
-    {HOLD, false, false, true},
-    {HOLD, false, true, false}
+    {SEQ, true, true, false},
+    {SEQ, true, false, false},
+    {SEQ, false, false, false},
+    {SEQ, false, true, false}
 };
 
 void toggleCooldown(uint8_t mode) {
@@ -59,11 +59,11 @@ void replenish(uint8_t mode) {
     }
 }
 
-void drainHold() {
-    if(getCurrentCooldown(HOLD) > 0) {
-        decrCurrentCooldown(HOLD);
-    } else {
-        stopCurrentlyPlaying();
-        turnHoldAutoDecrOff();
-    }
-}
+// void drainHold() {
+//     if(getCurrentCooldown(HOLD) > 0) {
+//         decrCurrentCooldown(HOLD);
+//     } else {
+//         stopCurrentlyPlaying();
+//         turnHoldAutoDecrOff();
+//     }
+// }

@@ -27,15 +27,33 @@ void sampPlay(uint8_t note, uint8_t chan) {
     }
 }
 
-void holdPlay(uint8_t note, uint8_t chan) {
-    if(getCurrentCooldown(HOLD) > 800) {
-        if(getCurrentlyPlaying() > 0 && getCurrentlyPlaying() != note) {
-            timedStop(getCurrentlyPlaying(), getNoteChan(), 1);
+// void holdPlay(uint8_t note, uint8_t chan) {
+//     if(getCurrentCooldown(HOLD) > 800) {
+//         if(getCurrentlyPlaying() > 0 && getCurrentlyPlaying() != note) {
+//             timedStop(getCurrentlyPlaying(), getNoteChan(), 1);
+//         }
+//         play(note, calculateVelocity(HOLD), chan);
+//         addToCurrentlyPlaying(note);
+//         turnHoldAutoDecrOn();
+//         // hold timer on
+//     }
+// }
+
+void playFromSeq() {
+    if(getSeqBarsLeft() > 0) {
+        if(getSeqHit() > 0) {
+            play(getCurrentSeqNote(), getSeqHit(), getSeqChan());
         }
-        play(note, calculateVelocity(HOLD), chan);
-        addToCurrentlyPlaying(note);
-        turnHoldAutoDecrOn();
-        // hold timer on
+
+        incrSeqPlayhead();
+
+        if(getSeqPlayheadPos() >= 16) {
+            resetSeqPlayhead();
+            decrSeqBarsLeft();
+        }
+    }
+    else if(getCurrentCooldown(SEQ) == 0) {
+        incrCurrentCooldown(SEQ);
     }
 }
 

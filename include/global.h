@@ -6,7 +6,7 @@
 #define GLOBAL_H
 
 enum{UNCHANGED, PRESSED, RELEASED};
-enum{DEF, SAMP, HOLD};
+enum{DEF, SAMP, SEQ};
 
 struct button {
   uint8_t pin;
@@ -17,7 +17,10 @@ struct button {
 struct note {
   uint8_t pin;
   uint8_t note;
-  uint8_t snote;
+  uint8_t sampnote;
+  uint8_t seqnote;
+  uint8_t seqlength;
+  uint8_t seqnumber;
 };
 
 uint8_t getMainMode();
@@ -33,9 +36,17 @@ void removeFromArp(uint8_t pin);
 uint8_t getFromArp(uint8_t id);
 uint8_t getArpSize();
 
+// arp playhead
+
 uint8_t getPlayheadPos();
 void incrPlayhead();
 void resetPlayhead();
+
+// seq playhead
+
+uint8_t getSeqPlayheadPos();
+void incrSeqPlayhead();
+void resetSeqPlayhead();
 
 uint8_t getCurrentlyPlaying();
 void addToCurrentlyPlaying(uint8_t note);
@@ -44,7 +55,10 @@ void clearCurrentlyPlaying();
 //utils
 void printVec(std::vector<uint8_t> &vect);
 uint8_t getNoteByPin(uint8_t pin);
-uint8_t getSnoteByPin(uint8_t pin);
+uint8_t getSampNoteByPin(uint8_t pin);
+uint8_t getSeqNoteByPin(uint8_t pin);
+uint8_t getSeqLengthByPin(uint8_t pin);
+uint8_t getSeqNumberByPin(uint8_t pin);
 uint16_t getRotaryValue();
 uint8_t getMappedRotaryValue();
 uint8_t getNoteChan();
@@ -69,9 +83,20 @@ void incrCurrentCooldown(uint8_t mode);
 void decrCurrentCooldown(uint8_t mode);
 uint16_t getMaxCooldown(uint8_t mode);
 
-boolean getHoldAutoDecrOn();
-void turnHoldAutoDecrOn();
-void turnHoldAutoDecrOff();
+// boolean getHoldAutoDecrOn();
+// void turnHoldAutoDecrOn();
+// void turnHoldAutoDecrOff();
+
+
+uint8_t getSeqBarsLeft();
+void setSeqBarsLeft(uint8_t newBars);
+void decrSeqBarsLeft();
+uint8_t getCurrentSeqNote();
+void setCurrentSeqNote(uint8_t newNote);
+uint8_t getCurrentSeqNumber();
+void setCurrentSeqNumber(uint8_t newNumber);
+uint8_t getSeqChan();
+uint8_t getSeqHit();
 
 uint8_t calculateVelocity(uint8_t mode);
 
