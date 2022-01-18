@@ -6,8 +6,8 @@ uint8_t mainMode = DEF;
 
 boolean intClock = false;
 
-uint8_t noteChan = 2;
-uint8_t seqChan = 3;
+uint8_t noteChan = 3;
+uint8_t seqChan = 4;
 uint8_t sampChan = 5;
 
 vector<uint8_t> arpSequence;
@@ -25,13 +25,13 @@ const uint8_t maxVelocity[] = {116, 127, 110};
 
 struct note pinNotes[][6] =
 { //pin, note, sampnote, seqnote, seqlength, seqnumber
-    {2, 36, 100, 50, 4, 0},
-    {3, 38, 101, 51, 1, 1},
-    {4, 41, 102, 52, 1, 2},
-    {5, 43, 103, 53, 4, 3},
-    {6, 46, 104, 54, 1, 4},
-    {7, 47, 105, 55, 1, 5},
-    {8, 48, 106, 56, 4, 6}
+    {2, 36, 47, 38, 4, 0},
+    {3, 38, 48, 37, 1, 1},
+    {4, 41, 49, 39, 1, 2},
+    {5, 43, 50, 36, 4, 3},
+    {6, 46, 51, 40, 1, 4},
+    {7, 47, 52, 41, 1, 5},
+    {8, 48, 53, 42, 4, 6}
 };
 
 const uint8_t drumSeqs[][16] = {

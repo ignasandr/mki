@@ -7,6 +7,9 @@
 
 using namespace std;
 
+boolean byteReady = false;
+byte midiByte = 0;
+
 const uint8_t initPinModes[][2] =
 {
     { 2, INPUT_PULLUP}, // notes
@@ -26,9 +29,9 @@ const uint8_t initPinModes[][2] =
 vector<struct button> buttonState;
 
 void setup() {
-  // Serial.begin(31250); // MIDI Serial
-  Serial.begin(9600);
-  Serial.println("Serial working");
+  Serial.begin(31250); // MIDI Serial
+  // Serial.begin(9600);
+  // Serial.println("Serial working");
 
   for (auto arr : initPinModes) {
     init(arr[0], arr[1]);
@@ -51,7 +54,16 @@ void loop() {
       mainRouter(button.pin, current);
     }
   }
-  generateTicks();
+  if(Serial.available() > 0) {
+    midiByte = Serial.read();
+    if(midiByte == 0xF8) handleTicks();
+    byteReady = true;
+  }
+  if (byteReady) {
+    byteReady = false;
+    Serial.write(midiByte);
+  }
+  // generateTicks();
   cooldownClock();
   ledRouter();
 }
