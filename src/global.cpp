@@ -6,7 +6,10 @@ uint8_t mainMode = DEF;
 
 boolean intClock = false;
 
-uint8_t noteChan = 3;
+uint8_t boxNumber = 1; // 
+
+uint8_t noteChan0 = 2; // used with boxNumber = 0;
+uint8_t noteChan1 = 3; // used with boxNumber = 1;
 uint8_t seqChan = 4;
 uint8_t sampChan = 5;
 
@@ -23,27 +26,47 @@ uint16_t currentCooldown[] = {6, 1, 1}; // starting cooldown values for DEF, SAM
 const uint8_t minVelocity[] = {80, 127, 20};
 const uint8_t maxVelocity[] = {116, 127, 110};
 
-struct note pinNotes[][6] =
+struct note pinNotes0[][6] =
 { //pin, note, sampnote, seqnote, seqlength, seqnumber
-    {2, 36, 47, 38, 4, 0},
-    {3, 38, 48, 37, 1, 1},
-    {4, 41, 49, 39, 1, 2},
-    {5, 43, 50, 36, 4, 3},
-    {6, 46, 51, 40, 1, 4},
-    {7, 47, 52, 41, 1, 5},
-    {8, 48, 53, 42, 4, 6}
+    {2, 36, 47, 38, 8, 0},
+    {3, 38, 48, 38, 8, 1},
+    {4, 40, 49, 38, 8, 2},
+    {5, 43, 50, 36, 8, 3},
+    {6, 45, 51, 43, 8, 4},
+    {7, 46, 52, 40, 8, 5},
+    {8, 48, 53, 40, 8, 6}
 };
 
-const uint8_t drumSeqs[][16] = {
-    {127, 120, 114, 102, 96, 80, 70, 60, 50, 49, 48, 47, 36, 35, 31, 20},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0},
-    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}
+struct note pinNotes1[][6] =
+{ //pin, note, sampnote, seqnote, seqlength, seqnumber
+    {2, 48, 54, 39, 8, 0},
+    {3, 52, 55, 39, 8, 1},
+    {4, 54, 56, 39, 8, 2},
+    {5, 55, 57, 37, 8, 3},
+    {6, 57, 58, 41, 8, 4},
+    {7, 58, 59, 42, 8, 5},
+    {8, 60, 60, 42, 8, 6}
 };
 
+const uint8_t drumSeqs0[][16] = {
+    {127, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0}, // 1
+    {127, 0, 0, 68, 0, 86, 0, 68, 127, 80, 106, 80, 0, 0, 0, 0}, // 2
+    {47, 71, 91, 115, 0, 64, 119, 0, 80, 100, 0, 73, 64, 50, 40, 37}, // 3
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}, // 4
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}, // 5
+    {54, 59, 64, 68, 73, 78, 83, 87, 92, 97, 102, 107, 111, 116, 121, 126}, // 6
+    {127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0} // 7
+};
+
+const uint8_t drumSeqs1[][16] = {
+    {127, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0}, // 1
+    {72, 0, 125, 0, 103, 70, 0, 80, 125, 0, 0, 70, 0, 0, 104, 0}, // 2
+    {0, 73, 101, 87, 65, 55, 0, 121, 98, 75, 56, 0, 50, 77, 97, 118}, // 3
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}, // 4
+    {127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0, 127, 0, 0, 0}, // 5
+    {126, 121, 116, 111, 107, 102, 97, 92, 87, 83, 78, 73, 68, 64, 59, 54}, // 6
+    {127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0} // 7
+};
 
 uint8_t getMainMode() {
     return mainMode;
@@ -143,45 +166,92 @@ void printVec(vector<uint8_t> &vect) {
 }
 
 uint8_t getNoteByPin(uint8_t pin) {
-    for(auto arr : pinNotes) {
-        if(arr->pin == pin) {
-            return arr->note;
+    if (boxNumber == 0) {
+        for(auto arr : pinNotes0) {
+            if(arr->pin == pin) {
+                return arr->note;
+            }
         }
+    }
+    else {
+        for(auto arr : pinNotes1) {
+            if(arr->pin == pin) {
+                return arr->note;
+            }
+        }
+        
     }
     return 0;
 }
 
 uint8_t getSampNoteByPin(uint8_t pin) {
-    for(auto arr : pinNotes) {
-        if(arr->pin == pin) {
-            return arr->sampnote;
+    if (boxNumber == 0) {
+        for(auto arr : pinNotes0) {
+            if(arr->pin == pin) {
+                return arr->sampnote;
+            }
         }
+    }
+    else {
+        for(auto arr : pinNotes1) {
+            if(arr->pin == pin) {
+                return arr->sampnote;
+            }
+        }
+
     }
     return 0;
 }
 
 uint8_t getSeqNoteByPin(uint8_t pin) {
-    for(auto arr : pinNotes) {
-        if(arr->pin == pin) {
-            return arr->seqnote;
+    if (boxNumber == 0) {
+        for(auto arr : pinNotes0) {
+            if(arr->pin == pin) {
+                return arr->seqnote;
+            }
+        }
+    }
+    else {
+        for(auto arr : pinNotes1) {
+            if(arr->pin == pin) {
+                return arr->seqnote;
+            }
         }
     }
     return 0;
 }
 
 uint8_t getSeqLengthByPin(uint8_t pin) {
-    for(auto arr : pinNotes) {
-        if(arr->pin == pin) {
-            return arr->seqlength;
+    if (boxNumber == 0) {
+        for(auto arr : pinNotes0) {
+            if(arr->pin == pin) {
+                return arr->seqlength;
+            }
+        }
+    }
+    else {
+        for(auto arr : pinNotes1) {
+            if(arr->pin == pin) {
+                return arr->seqlength;
+            }
         }
     }
     return 0;
 }
 
 uint8_t getSeqNumberByPin(uint8_t pin) {
-    for(auto arr : pinNotes) {
-        if(arr->pin == pin) {
-            return arr->seqnumber;
+    if (boxNumber == 0) {
+        for(auto arr : pinNotes0) {
+            if(arr->pin == pin) {
+                return arr->seqnumber;
+            }
+        }
+    }
+    else {
+        for(auto arr : pinNotes1) {
+            if(arr->pin == pin) {
+                return arr->seqnumber;
+            }
         }
     }
     return 0;
@@ -198,7 +268,11 @@ uint8_t getMappedRotaryValue() {
 
 
 uint8_t getNoteChan() {
-    return noteChan;
+    uint8_t chan = noteChan0;
+    if (boxNumber == 1) {
+        chan = noteChan1;
+    }
+    return chan;
 }
 
 uint8_t getSampChan() {
@@ -334,7 +408,12 @@ uint8_t getSeqChan() {
 }
 
 uint8_t getSeqHit() {
-    return drumSeqs[getCurrentSeqNumber()][getSeqPlayheadPos()];
+    if (boxNumber == 0) {
+        return drumSeqs0[getCurrentSeqNumber()][getSeqPlayheadPos()];
+    }
+    else {
+        return drumSeqs1[getCurrentSeqNumber()][getSeqPlayheadPos()];
+    }
 }
 
 
