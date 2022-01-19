@@ -147,6 +147,7 @@ void handleTicks() {
     if (tickCounter % 6 == 0) {
         if(getDivisionTicks() == 6) playFromArp(); // 16th notes
         playFromSeq();
+        toggleSync();
     } 
 
     if (tickCounter % 12 == 0) {

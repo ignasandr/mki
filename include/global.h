@@ -30,6 +30,12 @@ boolean getIntClock();
 void intClockOn();
 void intClockOff();
 
+boolean extClockOn();
+void setExtClock(boolean value);
+
+boolean getSync();
+void resetSync();
+void toggleSync();
 
 void addToArp(uint8_t pin);
 void removeFromArp(uint8_t pin);
@@ -98,6 +104,8 @@ uint16_t getMaxCooldown(uint8_t mode);
 // void turnHoldAutoDecrOff();
 
 
+boolean getSeqPlaying();
+void setSeqPlaying(boolean value);
 uint8_t getSeqBarsLeft();
 void setSeqBarsLeft(uint8_t newBars);
 void decrSeqBarsLeft();

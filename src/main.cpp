@@ -56,7 +56,12 @@ void loop() {
   }
   if(Serial.available() > 0) {
     midiByte = Serial.read();
-    if(midiByte == 0xF8) handleTicks();
+    if(midiByte == 0xFA) {
+      setExtClock(true);
+      resetSync();
+    }
+    if(midiByte == 0xFC) setExtClock(false);
+    if(extClockOn() && midiByte == 0xF8) handleTicks();
     byteReady = true;
   }
   if (byteReady) {

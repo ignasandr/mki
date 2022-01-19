@@ -14,6 +14,7 @@ void defPlay(uint8_t note, uint8_t chan) {
     if(getCurrentCooldown(DEF) > 0) {
         play(note, calculateVelocity(DEF), chan);
         decrCurrentCooldown(DEF);
+        updateDefCooldownThres();
         if(getCurrentCooldown(DEF) == 0 && getSeqBarsLeft() > 0) {
             setSeqBarsLeft(0);
             resetSeqPlayhead();
@@ -46,21 +47,25 @@ void sampPlay(uint8_t note, uint8_t chan) {
 // }
 
 void playFromSeq() {
-    if(getSeqBarsLeft() > 0) {
-        if(getSeqHit() > 0) {
-            play(getCurrentSeqNote(), getSeqHit(), getSeqChan());
-            play(getCurrentSeqNote(), 0, getSeqChan());
-        }
+    if(getSeqPlaying() || getSync()) {
+        if(getSeqBarsLeft() > 0) {
+            if(!getSeqPlaying()) setSeqPlaying(true);
+            if(getSeqHit() > 0) {
+                play(getCurrentSeqNote(), getSeqHit(), getSeqChan());
+                play(getCurrentSeqNote(), 0, getSeqChan());
+            }
 
-        incrSeqPlayhead();
+            incrSeqPlayhead();
 
-        if(getSeqPlayheadPos() >= 16) {
-            resetSeqPlayhead();
-            decrSeqBarsLeft();
+            if(getSeqPlayheadPos() >= 16) {
+                resetSeqPlayhead();
+                decrSeqBarsLeft();
+            }
         }
-    }
-    else if(getCurrentCooldown(SEQ) == 0) {
-        incrCurrentCooldown(SEQ);
+        else {
+            if(getSeqPlaying()) setSeqPlaying(false);
+            if(getCurrentCooldown(SEQ) == 0) incrCurrentCooldown(SEQ);
+        }
     }
 }
 

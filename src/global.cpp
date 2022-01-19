@@ -5,8 +5,11 @@ using namespace std;
 uint8_t mainMode = DEF;
 
 boolean intClock = false;
+boolean extClock = false;
 
-uint8_t boxNumber = 1; // 
+boolean sync = false;
+
+uint8_t boxNumber = 0; // 
 
 uint8_t noteChan0 = 2; // used with boxNumber = 0;
 uint8_t noteChan1 = 3; // used with boxNumber = 1;
@@ -23,7 +26,7 @@ uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
 boolean cooldownClock[] = {false, false, false}; // DEF, SAMP, HOLD
 
 uint16_t cooldownTime[] = {0, 0, 0};
-uint16_t cooldownThreshold[] = {300, 6000, 6000}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, SEQ}
+uint16_t cooldownThreshold[] = {40, 6000, 6000}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, SEQ}
 
 
 const uint16_t maxCooldown[] = {8, 1, 1};
@@ -34,24 +37,24 @@ const uint8_t maxVelocity[] = {116, 127, 110};
 
 struct note pinNotes0[][6] =
 { //pin, note, sampnote, seqnote, seqlength, seqnumber
-    {2, 36, 47, 38, 8, 0},
-    {3, 38, 48, 38, 8, 1},
-    {4, 40, 49, 38, 8, 2},
-    {5, 43, 50, 36, 8, 3},
-    {6, 45, 51, 43, 8, 4},
-    {7, 46, 52, 40, 8, 5},
-    {8, 48, 53, 40, 8, 6}
+    {2, 24, 47, 38, 16, 0},
+    {3, 26, 48, 38, 8, 1},
+    {4, 28, 49, 38, 8, 2},
+    {5, 31, 50, 36, 16, 3},
+    {6, 33, 51, 43, 8, 4},
+    {7, 34, 52, 40, 8, 5},
+    {8, 36, 53, 40, 16, 6}
 };
 
 struct note pinNotes1[][6] =
 { //pin, note, sampnote, seqnote, seqlength, seqnumber
-    {2, 48, 54, 39, 8, 0},
+    {2, 48, 54, 39, 16, 0},
     {3, 52, 55, 39, 8, 1},
     {4, 54, 56, 39, 8, 2},
-    {5, 55, 57, 37, 8, 3},
+    {5, 55, 57, 37, 16, 3},
     {6, 57, 58, 41, 8, 4},
     {7, 58, 59, 42, 8, 5},
-    {8, 60, 60, 42, 8, 6}
+    {8, 60, 60, 42, 16, 6}
 };
 
 const uint8_t drumSeqs0[][16] = {
@@ -74,6 +77,7 @@ const uint8_t drumSeqs1[][16] = {
     {127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0} // 7
 };
 
+
 uint8_t getMainMode() {
     return mainMode;
 }
@@ -86,6 +90,14 @@ boolean getIntClock() {
     return intClock;
 }
 
+boolean extClockOn() {
+    return extClock;
+}
+
+void setExtClock(boolean value) {
+    extClock = value;
+}
+
 void intClockOn() {
     intClock = true;
 }
@@ -94,6 +106,17 @@ void intClockOff() {
     intClock = false;
 }
 
+boolean getSync() {
+    return sync;
+}
+
+void resetSync() {
+    sync = false;
+}
+
+void toggleSync() {
+    sync = !getSync();
+}
 
 
 void addToArp(uint8_t pin) {
@@ -372,7 +395,12 @@ void setCooldownThreshold(uint8_t mode, unsigned long value) {
 }
 
 void updateDefCooldownThres() {
-    setCooldownThreshold(DEF, map(getCurrentCooldown(DEF), 0, getMaxCooldown(DEF), 400, 50));
+    if(getCurrentCooldown(DEF) >= getMaxCooldown(DEF) / 2) {
+        setCooldownThreshold(DEF, map(getCurrentCooldown(DEF), 0, getMaxCooldown(DEF), 100, 40));
+    }
+    else {
+        setCooldownThreshold(DEF, map(getCurrentCooldown(DEF), 0, getMaxCooldown(DEF), 500, 150));
+    }
 }
 
 uint16_t getCurrentCooldown(uint8_t mode) {
@@ -412,9 +440,18 @@ uint16_t getMaxCooldown(uint8_t mode) {
 // }
 
 // Sequence stuff
+boolean seqPlaying = false;
 uint8_t seqBarsLeft = 0;
 uint8_t currentSeqNote = 0;
 uint8_t currentSeqNumber = 0;
+
+boolean getSeqPlaying() {
+    return seqPlaying;
+}
+
+void setSeqPlaying(boolean value) {
+    seqPlaying = value;
+}
 
 uint8_t getSeqBarsLeft() {
     return seqBarsLeft;

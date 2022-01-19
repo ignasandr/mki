@@ -51,6 +51,9 @@ void replenish(uint8_t mode) {
     if(getCooldownTime(mode) >= getCooldownThreshold(mode)) { // if cooldown time reaches the threshold, increase cooldown by one point and reset clock
         incrCurrentCooldown(mode);
         resetCooldownTime(mode);
+        if(mode == DEF) {
+            updateDefCooldownThres();
+        }
     }
 }
 
