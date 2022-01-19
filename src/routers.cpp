@@ -36,6 +36,9 @@ void noteRouter(uint8_t pin, uint8_t change) {
                         setCurrentSeqNumber(getSeqNumberByPin(pin));
                         setSeqBarsLeft(getSeqLengthByPin(pin));
                         decrCurrentCooldown(SEQ);
+                        if(getCurrentCooldown(DEF) < getMaxCooldown(DEF)) {
+                            setCurrentCooldown(DEF, getMaxCooldown(DEF));
+                        }
                     }
                     break;
                 case RELEASED:

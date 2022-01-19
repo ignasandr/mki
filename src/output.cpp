@@ -14,6 +14,11 @@ void defPlay(uint8_t note, uint8_t chan) {
     if(getCurrentCooldown(DEF) > 0) {
         play(note, calculateVelocity(DEF), chan);
         decrCurrentCooldown(DEF);
+        if(getCurrentCooldown(DEF) == 0 && getSeqBarsLeft() > 0) {
+            setSeqBarsLeft(0);
+            resetSeqPlayhead();
+            incrCurrentCooldown(SEQ);
+        }
         addToCurrentlyPlaying(note); // add
         incrPlayhead();
         timedStop(note, chan, getMappedRotaryValue());

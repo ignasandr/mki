@@ -20,8 +20,8 @@ uint8_t seqPlayhead = 0;
 
 uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
 
-const uint16_t maxCooldown[] = {6, 1, 1};
-uint16_t currentCooldown[] = {6, 1, 1}; // starting cooldown values for DEF, SAMP, SEQ
+const uint16_t maxCooldown[] = {8, 1, 1};
+uint16_t currentCooldown[] = {8, 1, 1}; // starting cooldown values for DEF, SAMP, SEQ
 
 const uint8_t minVelocity[] = {80, 127, 20};
 const uint8_t maxVelocity[] = {116, 127, 110};
@@ -348,6 +348,10 @@ void incrCurrentCooldown(uint8_t mode) {
 
 void decrCurrentCooldown(uint8_t mode) {
     currentCooldown[mode] -= 1;
+}
+
+void setCurrentCooldown(uint8_t mode, uint8_t value) {
+    currentCooldown[mode] = value;
 }
 
 uint16_t getMaxCooldown(uint8_t mode) {
