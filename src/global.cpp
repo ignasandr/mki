@@ -20,6 +20,12 @@ uint8_t seqPlayhead = 0;
 
 uint8_t divisionTicks = 12; // 12 for 8th notes, 6 for 16th notes
 
+boolean cooldownClock[] = {false, false, false}; // DEF, SAMP, HOLD
+
+uint16_t cooldownTime[] = {0, 0, 0};
+uint16_t cooldownThreshold[] = {300, 6000, 6000}; //time after which 1 unit of cooldown is replenished for {DEF, SAMP, SEQ}
+
+
 const uint16_t maxCooldown[] = {8, 1, 1};
 uint16_t currentCooldown[] = {8, 1, 1}; // starting cooldown values for DEF, SAMP, SEQ
 
@@ -337,6 +343,37 @@ void setStopCounter(uint8_t numberOfTicks) {
 
 // Cooldown stuff 
 
+boolean getCooldownClock(uint8_t mode) {
+    return cooldownClock[mode];
+}
+
+void setCooldownClock(uint8_t mode, boolean value) {
+    cooldownClock[mode] = value;
+}
+
+uint16_t getCooldownTime(uint8_t mode) {
+    return cooldownTime[mode];
+}
+
+void incrCooldownTime(uint8_t mode) {
+    cooldownTime[mode] += 1;
+}
+
+void resetCooldownTime(uint8_t mode) {
+    cooldownTime[mode] = 0;
+}
+
+uint16_t getCooldownThreshold(uint8_t mode) {
+    return cooldownThreshold[mode];
+}
+
+void setCooldownThreshold(uint8_t mode, unsigned long value) {
+    cooldownThreshold[mode] = value;
+}
+
+void updateDefCooldownThres() {
+    setCooldownThreshold(DEF, map(getCurrentCooldown(DEF), 0, getMaxCooldown(DEF), 400, 50));
+}
 
 uint16_t getCurrentCooldown(uint8_t mode) {
     return currentCooldown[mode];

@@ -78,6 +78,15 @@ void decrStopCounter();
 void setStopCounter(uint8_t numberOfTicks);
 
 
+boolean getCooldownClock(uint8_t mode);
+void setCooldownClock(uint8_t mode, boolean value);
+uint16_t getCooldownTime(uint8_t mode);
+void incrCooldownTime(uint8_t mode);
+void resetCooldownTime(uint8_t mode);
+uint16_t getCooldownThreshold(uint8_t mode);
+void setCooldownThreshold(uint8_t mode, unsigned long value);
+void updateDefCooldownThres();
+
 uint16_t getCurrentCooldown(uint8_t mode);
 void incrCurrentCooldown(uint8_t mode);
 void decrCurrentCooldown(uint8_t mode);
