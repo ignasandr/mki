@@ -77,7 +77,6 @@ const uint8_t drumSeqs1[][16] = {
     {127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0, 127, 0, 110, 0} // 7
 };
 
-
 uint8_t getMainMode() {
     return mainMode;
 }
