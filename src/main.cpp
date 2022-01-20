@@ -7,8 +7,11 @@
 
 using namespace std;
 
-boolean byteReady = false;
-byte midiByte = 0;
+#define MIDI_START 0xFA
+#define MIDI_STOP 0xFC
+#define MIDI_CLOCK 0xF8
+
+byte midiByte;
 
 const uint8_t initPinModes[][2] =
 {
@@ -54,19 +57,23 @@ void loop() {
       mainRouter(button.pin, current);
     }
   }
-  if(Serial.available() > 0) {
+
+  // MIDI Thru
+  if(Serial.available() > 0) { 
     midiByte = Serial.read();
-    if(midiByte == 0xFA) {
+
+    if(midiByte == MIDI_START) {
       setExtClock(true);
       resetSync();
     }
-    if(midiByte == 0xFC) setExtClock(false);
-    if(extClockOn() && midiByte == 0xF8) handleTicks();
-    byteReady = true;
-  }
-  if (byteReady) {
-    byteReady = false;
-    Serial.write(midiByte);
+
+    if(midiByte == MIDI_STOP) {
+      setExtClock(false);
+    }
+
+    if(extClockOn() && midiByte == MIDI_CLOCK) {
+      handleTicks();
+    }
   }
   // generateTicks();
   cooldownClock();
