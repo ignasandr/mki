@@ -23,21 +23,30 @@ void noteRouter(uint8_t pin, uint8_t change) {
         case SAMP:
             switch(change) {
                 case PRESSED:
-                    sampPlay(getSnoteByPin(pin), getSampChan());
+                    sampPlay(getSampNoteByPin(pin), getSampChan());
                     break;
             }
         break;
-        case HOLD:
+        case SEQ:
             switch(change) {
                 case PRESSED:
-                    holdPlay(getNoteByPin(pin), getNoteChan());
+                    // holdPlay(getNoteByPin(pin), getNoteChan());
+                    if (getCurrentCooldown(SEQ) > 0) {
+                        setCurrentSeqNote(getSeqNoteByPin(pin));
+                        setCurrentSeqNumber(getSeqNumberByPin(pin));
+                        setSeqBarsLeft(getSeqLengthByPin(pin));
+                        decrCurrentCooldown(SEQ);
+                        if(getCurrentCooldown(DEF) < getMaxCooldown(DEF)) {
+                            setCurrentCooldown(DEF, getMaxCooldown(DEF));
+                        }
+                    }
                     break;
                 case RELEASED:
-                    if (getCurrentlyPlaying() == getNoteByPin(pin)) {
-                        stop(getNoteByPin(pin), getNoteChan());
-                        clearCurrentlyPlaying();
-                        turnHoldAutoDecrOff();
-                    } 
+                    // if (getCurrentlyPlaying() == getNoteByPin(pin)) {
+                    //     stop(getNoteByPin(pin), getNoteChan());
+                    //     clearCurrentlyPlaying();
+                    //     turnHoldAutoDecrOff();
+                    // } 
                     break;
             }
         break;
@@ -57,9 +66,9 @@ void switchRouter(uint8_t pin, uint8_t change) {
 
 const shiftStateTable sst[] = {
     { DEF, 12, PRESSED, SAMP },
-    { DEF, 13, PRESSED, HOLD },
+    { DEF, 13, PRESSED, SEQ },
     { SAMP, 12, RELEASED, DEF },
-    { HOLD, 13, RELEASED, DEF }
+    { SEQ, 13, RELEASED, DEF }
 };
 
 void shiftRouter(uint8_t pin, uint8_t change) {
@@ -71,9 +80,9 @@ void shiftRouter(uint8_t pin, uint8_t change) {
                     if (getCurrentlyPlaying() > 0) {
                         stopCurrentlyPlaying();
                         turnStopCounterOff();
-                        if (getHoldAutoDecrOn() == true) {
-                            turnHoldAutoDecrOff();
-                        }
+                        // if (getHoldAutoDecrOn() == true) {
+                        //     turnHoldAutoDecrOff();
+                        // }
                     }
                     // Serial.print("The state switched to ");
                     // Serial.println(entry.next_state);
@@ -104,9 +113,14 @@ void ledRouter() {
                     analogWrite(ledDown, 0);
                 }
             break;
-            case HOLD:
-                analogWrite(ledUp, 255);
+            case SEQ:
                 analogWrite(ledDown, 0);
+                if (getCurrentCooldown(SEQ) > 0) {
+                    analogWrite(ledUp, 255);
+                }
+                else {
+                    analogWrite(ledUp, 0);
+                }
             break;
         }
 }
@@ -132,6 +146,8 @@ void handleTicks() {
 
     if (tickCounter % 6 == 0) {
         if(getDivisionTicks() == 6) playFromArp(); // 16th notes
+        playFromSeq();
+        toggleSync();
     } 
 
     if (tickCounter % 12 == 0) {
