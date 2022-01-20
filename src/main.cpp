@@ -10,8 +10,16 @@ using namespace std;
 #define MIDI_START 0xFA
 #define MIDI_STOP 0xFC
 #define MIDI_CLOCK 0xF8
+#define MIDI_NOTE_ON 0x90
 
-byte midiByte;
+boolean byteReady = false;
+byte midiByte = 0;
+byte midiCmd = 0;
+byte midiState = 0;
+byte sendCmd = 0;
+byte sendNote = 0;
+byte sendVel = 0;
+
 
 const uint8_t initPinModes[][2] =
 {
@@ -61,20 +69,55 @@ void loop() {
   // MIDI Thru
   if(Serial.available() > 0) { 
     midiByte = Serial.read();
+    midiCmd = midiByte & B11110000;
 
     if(midiByte == MIDI_START) {
       setExtClock(true);
       resetSync();
+      Serial.write(midiByte);
     }
 
     if(midiByte == MIDI_STOP) {
       setExtClock(false);
+      Serial.write(midiByte);
     }
 
     if(extClockOn() && midiByte == MIDI_CLOCK) {
       handleTicks();
+      Serial.write(midiByte);
     }
+    switch(midiState) {
+      case 0:
+        if (midiCmd == 0x90) {
+          sendCmd = midiByte;
+          midiState = 1;
+        }
+        break;
+      case 1:
+        if (midiByte < 128) {
+          sendNote = midiByte;
+          midiState = 2;
+        }
+        else {
+          midiState = 0;
+        }
+        break;
+      case 2:
+        if (midiByte < 128) {
+          sendVel = midiByte;
+          Serial.write(sendCmd);
+          Serial.write(sendNote);
+          Serial.write(sendVel);
+          midiState = 0;
+        }
+        else {
+          midiState = 0;
+        }
+        break;
+    }
+      
   }
+
   // generateTicks();
   cooldownClock();
   ledRouter();
